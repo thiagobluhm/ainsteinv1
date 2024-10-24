@@ -1,0 +1,117 @@
+/* Corpo da página */
+body {
+    background-color:  #00436A;
+    background-size: cover;
+    background-position: center;
+    margin: 0;
+    font-family: 'Helvetica', sans-serif;
+    color: #f5f5f5; /* Cor de texto (branco claro) */
+}
+
+
+
+table {
+    color:aquamarine;
+    border-color: aquamarine;
+}
+
+.st-emotion-cache-arzcut {
+    border-radius: 15px 15px 0 0;
+    background-color: rgba(25,25,25, 0.1);
+}
+
+.st-emotion-cache-4oy321{
+    background-color: rgba(31,48,61, 0.8);
+}
+
+.st-emotion-cache-1c7y2kd {
+    background-color: rgba(31,48,61, 0.5);
+}
+
+/* Título principal (h1) */
+h1 {
+    color: #e0e0e0; /* Cinza claro */
+    text-align: center;
+}
+
+/* Subtítulos (h2, h3) */
+h2, h3 {
+    color: #dcdcdc; /* Outro tom de cinza claro */
+    text-align: center;
+}
+
+/* Parágrafos */
+p {
+    color: #dcdcdc; /* Cinza claro */
+    line-height: 1.6;
+}
+
+ol, ul , li {color:#bfbfbf}
+
+/* Links */
+a {
+    color: #bfbfbf; /* Cinza médio */
+    text-decoration: none;
+}
+
+a:hover {
+    color: #ffffff; /* Branco ao passar o mouse */
+}
+
+/* Botões */
+button {
+    background-color: #333333; /* Cinza escuro */
+    color: #f5f5f5; /* Branco claro */
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #444444; /* Cinza ligeiramente mais claro */
+}
+
+/* Containers e Widgets personalizados */
+.stButton>button {
+    background-color: #4a4a4a; /* Botões do Streamlit com fundo cinza escuro */
+    color: white;
+    border: 2px solid #333333;
+    border-radius: 10px;
+}
+
+.stTextInput>div>input {
+    background-color: #262626; /* Caixa de input com fundo cinza escuro */
+    color: white;
+    border: 2px solid #444444;
+}
+
+.stTextArea>div>textarea {
+    background-color: #262626; /* Caixa de textarea com fundo cinza escuro */
+    color: white;
+    border: 2px solid #444444;
+}
+
+.st-emotion-cache-1r4qj8v {
+    background-color: #7e2828;
+}
+
+.st-emotion-cache-arzcut, .st-emotion-cache-6qob1r {
+    background-color: #00436A;
+}
+
+.st-emotion-cache-1dp5vir, .st-emotion-cache-12fmjuu, .st-emotion-cache-uhkwx6 {
+    background: none;
+}
+
+.st-emotion-cache-1r4qj8v{
+    background: none;
+}
+
+/* Footer */
+footer {
+    text-align: center;
+    padding: 20px;
+    background-color: #1a1a1a; /* Preto com cinza */
+    color: #bfbfbf; /* Cinza médio */
+}
