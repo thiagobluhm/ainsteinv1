@@ -3,8 +3,6 @@ import streamlit as st
 import requests
 import hashlib
 from datetime import datetime
-import tempfile
-from pathlib import Path
 
 import os
 os.chdir(os.path.abspath(os.curdir))
@@ -21,7 +19,7 @@ def conversaID():
     return hash_id[1]
 
 # URL do backend FastAPI (ajuste para o seu host se necessário)
-API_URL = "https://aisten-h0f8enarbrhscqfx.brazilsouth-01.azurewebsites.net/aistein/"
+API_URL = "https://aistein-dkhrgud5ffgtbzea.brazilsouth-01.azurewebsites.net/aistein/"
 
 # Função para serializar o histórico de chat
 def serializar_chat_history(chat_history):
@@ -35,14 +33,7 @@ def serializar_chat_history(chat_history):
 
 # Função para simular o caminho do arquivo (já que não podemos acessar o caminho diretamente)
 def get_file_name(uploaded_file):
-    return uploaded_file if uploaded_file else "Nenhum arquivo selecionado."
-
-# Função para salvar o arquivo temporariamente
-def save_uploaded_file(uploaded_file):
-    file_extension = Path(uploaded_file.name).suffix
-    with tempfile.NamedTemporaryFile(delete=False, suffix=file_extension) as temp_file:
-        temp_file.write(uploaded_file.read())
-        return temp_file.name
+    return uploaded_file.name if uploaded_file else "Nenhum arquivo selecionado."
 
 # Função para enviar o prompt para a API
 def enviar_prompt_api(prompt, session_id, chat_history):
@@ -101,16 +92,15 @@ if "chat_history" not in st.session_state:
     st.session_state["chat_history"] = []
 
 if "messages" not in st.session_state:
-    st.session_state["messages"] = [{"role": "assistant", "content": "Olá, meu nome é AIstein sou o assistente digital da PortfolioTECH e vou te auxiliar."}]
+    st.session_state["messages"] = [{"role": "assistant", "content": "Olá, eu sou o assistente digital da PortfolioTECH e vou te auxiliar."}]
 
 for msg in st.session_state.messages:
     st.chat_message(msg["role"], avatar="👤").write(msg["content"])
 
+
 # Verifica se um arquivo foi carregado e envia para o chat
 file_name = None
-
 if uploaded_file:
-    uploaded_file = save_uploaded_file(uploaded_file)
     file_name = get_file_name(uploaded_file)
     print(f"AQUIIIIIIIIIIII {file_name}")
     # Adiciona a mensagem no chat assim que o arquivo é carregado, se ainda não estiver no chat
@@ -145,8 +135,7 @@ if prompt := st.chat_input(placeholder="Digite aqui o que precisa...") or file_n
             response = enviar_prompt_api(prompt, hash_id, chat_history)
             st.session_state.messages.append({"role": "assistant", "content": response["resposta"]})
             st.session_state.chat_history.append(AIMessage(content=response["resposta"]))  # Adiciona a resposta ao chat_history
-            st.chat_message("assistant", avatar="👤").write(response["resposta"])
+            st.chat_message("assistant", avatar="🤓").write(response["resposta"])
 
         except Exception as e:
             print(f"ERRO final prompt: {e}")
-
