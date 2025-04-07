@@ -66,7 +66,7 @@ with open("style.css") as f:
     st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
 
 with st.sidebar:
-    st.image('https://grupoportfolio.com.br/wp-content/uploads/revslider/portfolio-slider-inicial-12/portfolio-logo-branco-400.png', use_column_width="auto")
+    st.image('https://grupoportfolio.com.br/wp-content/uploads/revslider/portfolio-slider-inicial-12/portfolio-logo-branco-400.png', use_container_width="auto")
     #if st.button("Limpar Histórico"):
     #    st.session_state.chat_history = []
     #    st.session_state.messages = []
