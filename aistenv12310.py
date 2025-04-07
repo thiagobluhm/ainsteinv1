@@ -180,14 +180,20 @@ def upload_file_to_blob(file_path, blob_name=None):
         container_name = "chatwpp"
         connection_string = os.environ.get("META_CONN_STRING")
 
+        if not connection_string:
+            print("❌ META_CONN_STRING não encontrada.")
+            return None
+
         blob_service_client = BlobServiceClient.from_connection_string(connection_string)
         blob_client = blob_service_client.get_container_client(container_name).get_blob_client(blob_name)
 
         with open(file_path, "rb") as data:
             blob_client.upload_blob(data, overwrite=True)
-        return blob_name  # ← Esse nome é o que você deve enviar como prompt
+
+        print(f"✅ Upload feito para o Blob: {blob_name}")
+        return blob_name
     except Exception as e:
-        print(f"Erro ao subir para o Blob: {e}")
+        print(f"❌ Erro ao subir para o Blob: {e}")
         return None
 
 # Função para serializar o histórico de chat
@@ -260,7 +266,7 @@ with st.sidebar:
     #    st.session_state.chat_history = []
     #    st.session_state.messages = []
     # Componente de upload de arquivo
-    uploaded_file = st.file_uploader("Selecione um arquivo", type=["txt", "pdf", "jpg", "png", "csv"])
+    #uploaded_file = st.file_uploader("Selecione um arquivo", type=["txt", "pdf", "jpg", "png", "csv"])
 
     # Exibe o histórico de conversa na barra lateral
     if "chat_history" in st.session_state:
