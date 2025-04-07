@@ -252,7 +252,7 @@ with st.sidebar:
             elif isinstance(message, AIMessage):
                 st.write(f"**Assistente:** {message.content}")
 
-st.title("🗨️ Assistente Digital - SEINFRA")
+st.title("🗨️ Assistente Digital - AIstein")
 
 # Verifique se o 'hash_id' já existe na sessão; se não, crie um
 if "hash_id" not in st.session_state:
