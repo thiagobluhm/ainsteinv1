@@ -92,7 +92,7 @@ if "chat_history" not in st.session_state:
     st.session_state["chat_history"] = []
 
 if "messages" not in st.session_state:
-    st.session_state["messages"] = [{"role": "assistant", "content": "Olá, eu sou o assistente digital da PortfolioTECH e vou te auxiliar."}]
+    st.session_state["messages"] = [{"role": "assistant", "content": "Olá, eu sou o assistente digital e vou te auxiliar."}]
 
 for msg in st.session_state.messages:
     st.chat_message(msg["role"], avatar="👤").write(msg["content"])
