@@ -19,7 +19,7 @@ def conversaID():
     return hash_id[1]
 
 # URL do backend FastAPI (ajuste para o seu host se necessário)
-API_URL = "https://aistein-dkhrgud5ffgtbzea.brazilsouth-01.azurewebsites.net/aistein/"
+API_URL = "appaistein-dnaxg3amcthxecfs.eastus2-01.azurewebsites.net/aistein/"
 
 # Função para serializar o histórico de chat
 def serializar_chat_history(chat_history):
