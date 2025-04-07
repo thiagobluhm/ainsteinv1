@@ -295,17 +295,17 @@ for msg in st.session_state.messages:
 # Verifica se um arquivo foi carregado e envia para o chat
 file_name = None
 
-if uploaded_file:
-    # uploaded_file = save_uploaded_file(uploaded_file)
-    # file_name = get_file_name(uploaded_file)
-    local_path = save_uploaded_file(uploaded_file)
-    file_name = upload_file_to_blob(local_path)
-    prompt = file_name
-    print(f"{file_name}")
-    # Adiciona a mensagem no chat assim que o arquivo é carregado, se ainda não estiver no chat
-    if not any(msg['content'] == f"Arquivo carregado: {file_name}" for msg in st.session_state.messages):
-        st.session_state.messages.append({"role": "user", "content": f"Arquivo carregado: {file_name}"})
-        #st.chat_message("user", avatar="👤").write(f"Arquivo carregado: {file_name}")
+# if uploaded_file:
+#     # uploaded_file = save_uploaded_file(uploaded_file)
+#     # file_name = get_file_name(uploaded_file)
+#     local_path = save_uploaded_file(uploaded_file)
+#     file_name = upload_file_to_blob(local_path)
+#     prompt = file_name
+#     print(f"{file_name}")
+#     # Adiciona a mensagem no chat assim que o arquivo é carregado, se ainda não estiver no chat
+#     if not any(msg['content'] == f"Arquivo carregado: {file_name}" for msg in st.session_state.messages):
+#         st.session_state.messages.append({"role": "user", "content": f"Arquivo carregado: {file_name}"})
+#         #st.chat_message("user", avatar="👤").write(f"Arquivo carregado: {file_name}")
 
 # Entrada do usuário
 if prompt := st.chat_input(placeholder="Digite aqui o que precisa...") or file_name:
