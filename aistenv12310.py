@@ -172,6 +172,24 @@ def conversaID():
 # URL do backend FastAPI (ajuste para o seu host se necessário)
 API_URL = "https://appaistein-dnaxg3amcthxecfs.eastus2-01.azurewebsites.net/aistein/"
 
+from azure.storage.blob import BlobServiceClient
+import uuid
+def upload_file_to_blob(file_path, blob_name=None):
+    try:
+        blob_name = blob_name or f"{uuid.uuid4()}{Path(file_path).suffix}"
+        container_name = "chatwpp"
+        connection_string = os.environ.get("META_CONN_STRING")
+
+        blob_service_client = BlobServiceClient.from_connection_string(connection_string)
+        blob_client = blob_service_client.get_container_client(container_name).get_blob_client(blob_name)
+
+        with open(file_path, "rb") as data:
+            blob_client.upload_blob(data, overwrite=True)
+        return blob_name  # ← Esse nome é o que você deve enviar como prompt
+    except Exception as e:
+        print(f"Erro ao subir para o Blob: {e}")
+        return None
+
 # Função para serializar o histórico de chat
 def serializar_chat_history(chat_history):
     serializado = []
@@ -272,8 +290,11 @@ for msg in st.session_state.messages:
 file_name = None
 
 if uploaded_file:
-    uploaded_file = save_uploaded_file(uploaded_file)
-    file_name = get_file_name(uploaded_file)
+    # uploaded_file = save_uploaded_file(uploaded_file)
+    # file_name = get_file_name(uploaded_file)
+    local_path = save_uploaded_file(uploaded_file)
+    file_name = upload_file_to_blob(local_path)
+    prompt = file_name
     print(f"{file_name}")
     # Adiciona a mensagem no chat assim que o arquivo é carregado, se ainda não estiver no chat
     if not any(msg['content'] == f"Arquivo carregado: {file_name}" for msg in st.session_state.messages):
