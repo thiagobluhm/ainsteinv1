@@ -126,7 +126,7 @@ with open("style.css") as f:
     st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
 
 with st.sidebar:
-    st.image('https://sindojus-ce.org.br/wp-content/uploads/2016/10/unifor-logo-358x358.jpg', use_container_width="auto")
+    st.image('https://grupoportfolio.com.br/portfolio-formacao/wp-content/uploads/sites/2/2020/09/portfolio-tech-negativo-2.png', use_container_width="auto")
     #if st.button("Limpar Histórico"):
     #    st.session_state.chat_history = []
     #    st.session_state.messages = []
@@ -152,7 +152,7 @@ if "chat_history" not in st.session_state:
     st.session_state["chat_history"] = []
 
 if "messages" not in st.session_state:
-    st.session_state["messages"] = [{"role": "assistant", "content": "Olá, meu nome é AIstein sou um assistente digital e vou te auxiliar."}]
+    st.session_state["messages"] = [{"role": "assistant", "content": "Olá, meu nome é AIstein, sou um assistente digital e vou te auxiliar."}]
 
 for msg in st.session_state.messages:
     st.chat_message(msg["role"], avatar="👤").write(msg["content"])
