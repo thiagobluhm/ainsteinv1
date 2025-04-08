@@ -166,26 +166,35 @@ if uploaded_file:
     local_path = save_uploaded_file(uploaded_file)
     file_name = upload_file_to_blob(local_path)
     prompt = file_name
-    print(f"{file_name}")
+    print(f"{file_name}")    
     # Adiciona a mensagem no chat assim que o arquivo é carregado, se ainda não estiver no chat
     if not any(msg['content'] == f"Arquivo carregado: {file_name}" for msg in st.session_state.messages):
         st.session_state.messages.append({"role": "user", "content": f"Arquivo carregado: {file_name}"})
         #st.chat_message("user", avatar="👤").write(f"Arquivo carregado: {file_name}")
 
 # Entrada do usuário
-if prompt := st.chat_input(placeholder="Digite aqui o que precisa...") or file_name:
+chat_input = st.chat_input(placeholder="Digite aqui o que precisa...")
+
+# Decide o prompt com prioridade para o input manual
+prompt = chat_input if chat_input else file_name
+
+# Apenas continua se houver um prompt válido
+if prompt:
     print(f"<<<<<<<<<<<<<<<<<<<<<<<<<< {prompt} >>>>>>>>>>>>>>>>>>>>>>>>>\n")
     print(st.session_state["chat_history"])
+
+    # Define a mensagem do usuário com base no tipo de prompt
     if prompt == file_name:
-        # Adiciona a mensagem com o nome do arquivo que foi escolhido
         st.session_state.messages.append({"role": "user", "content": f"Arquivo carregado: {file_name}"})
+        st.chat_message("user", avatar="🤓").write(f"Arquivo carregado: {file_name}")
+        file_name = None  # ⚠️ limpa o file_name para não reaproveitar
         uploaded_file = None
     else:
-        # Adiciona a mensagem do usuário ao chat
         st.session_state.messages.append({"role": "user", "content": prompt})
-        
-    st.session_state.chat_history.append(HumanMessage(content=prompt))  # Adiciona a mensagem do usuário ao chat_history
-    st.chat_message("user", avatar="🤓").write(prompt)
+        st.chat_message("user", avatar="🤓").write(prompt)
+
+    # Adiciona ao histórico
+    st.session_state.chat_history.append(HumanMessage(content=prompt))
 
     # Usa o hash_id constante para manter a sessão
     hash_id = st.session_state["hash_id"]
@@ -197,16 +206,31 @@ if prompt := st.chat_input(placeholder="Digite aqui o que precisa...") or file_n
             
             # Envia a próxima interação do usuário para o endpoint
             response = enviar_prompt_api(prompt, hash_id, chat_history)
-            print(response)
+            #print(response)
             #response['resposta'] = "RESPOTA TESTE AQUI..."
-            print(f"RESPOSTA DA ENVIAR_PROMPT_API: {response}")
+            #print(f"RESPOSTA DO ENVIAR_PROMPT_API: {response}")
+            resposta = response.get("resposta", "⚠️ Nenhuma resposta recebida da API.")
 
-            st.session_state.messages.append({"role": "assistant", "content": response["resposta"]})
-            st.session_state.chat_history.append(AIMessage(content=response["resposta"]))  # Adiciona a resposta ao chat_history
+            # Garantir que a resposta seja sempre uma string
+            if not resposta:
+                resposta = "❌ Nenhuma resposta foi retornada."
+            elif isinstance(resposta, list):
+                resposta = "\n".join(map(str, resposta))
+            elif isinstance(resposta, dict):
+                resposta = str(resposta)
+
+            # Salva no estado do chat
+            st.session_state.messages.append({"role": "assistant", "content": resposta})
+            st.session_state.chat_history.append(AIMessage(content=resposta))
+
+            # Limpeza visual se necessário
             regex1 = r"\\^!\[.*\s\w*\]."
-            texto = response['resposta'].split('imagens/')[0]
+            texto = resposta.split('imagens/')[0]  # Se tiver imagem, separa do conteúdo
             texto_limpo = re.sub(regex1, "", texto)
+
+            # Exibir a mensagem do assistente
             st.chat_message("assistant", avatar="👤").write(texto_limpo)
+
 
             # VERIFICACAO E PLOTAGEM DE IMAGEM CASO EXISTA
             try:
