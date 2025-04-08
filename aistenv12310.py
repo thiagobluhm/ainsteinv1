@@ -167,22 +167,24 @@ for msg in st.session_state.messages:
 file_name = None
 
 if uploaded_file:
-    # uploaded_file = save_uploaded_file(uploaded_file)
-    # file_name = get_file_name(uploaded_file)
     local_path = save_uploaded_file(uploaded_file)
     file_name = upload_file_to_blob(local_path)
-    prompt = file_name
-    print(f"{file_name}")    
-    # Adiciona a mensagem no chat assim que o arquivo é carregado, se ainda não estiver no chat
-    if not any(msg['content'] == f"Arquivo carregado: {file_name}" for msg in st.session_state.messages):
+    print(f"🟢 Upload feito: {file_name}")
+    
+    # Exibe que o arquivo foi carregado
+    if file_name:
         st.session_state.messages.append({"role": "user", "content": f"Arquivo carregado: {file_name}"})
-        #st.chat_message("user", avatar="👤").write(f"Arquivo carregado: {file_name}")
+        st.session_state.chat_history.append(HumanMessage(content=f"Arquivo carregado: {file_name}"))
+        
+        # Marca que o arquivo já foi processado
+        uploaded_file = None
+        file_name = None  # ⚠️ Aqui você limpa para não virar prompt no ciclo seguinte
 
 # Entrada do usuário
 chat_input = st.chat_input(placeholder="Digite aqui o que precisa...")
 
 # Decide o prompt com prioridade para o input manual
-prompt = chat_input if chat_input else file_name
+prompt = chat_input.strip() if chat_input else None
 
 # Apenas continua se houver um prompt válido
 if prompt:
