@@ -17,7 +17,12 @@ load_dotenv()
 
 # Configurar logs
 #logging.basicConfig(level=logging.DEBUG)
-st.set_page_config(layout="wide")
+st.set_page_config(
+    layout="wide",
+    page_title="AIstein - Assistente Digital",
+    page_icon="🤖"
+)
+
 
 def data_legivel():
     data_legivel = datetime.fromtimestamp(datetime.timestamp(datetime.now())).strftime('%Y-%m-%d %H:%M:%S')
