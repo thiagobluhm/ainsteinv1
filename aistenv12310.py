@@ -102,10 +102,9 @@ if uploaded_file and not st.session_state.arquivo_processado:
 
 # Entrada do usuário
 chat_input = st.chat_input("Digite aqui o que precisa...")
-prompt = chat_input if chat_input else (
-    f"Arquivo carregado: {st.session_state['file_name_from_blob']}"
-    if st.session_state["file_name_from_blob"] else None
-)
+prompt = chat_input
+if not prompt and st.session_state["file_name_from_blob"]:
+    prompt = f"Por favor, extraia os dados do arquivo {st.session_state['file_name_from_blob']}"
 
 # Processa prompt
 if prompt:
