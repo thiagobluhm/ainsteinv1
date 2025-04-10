@@ -17,8 +17,8 @@ st.set_page_config(layout="wide", page_title="AIstein - Assistente Digital", pag
 load_dotenv()
 os.chdir(os.path.abspath(os.curdir))
 
-# #API_URL = "https://appaistein-dnaxg3amcthxecfs.eastus2-01.azurewebsites.net/aistein/"
-API_URL = "http://localhost:8000/aistein/"
+API_URL = "https://appaistein-dnaxg3amcthxecfs.eastus2-01.azurewebsites.net/aistein/"
+#API_URL = "http://localhost:8000/aistein/"
 
 # Utilitários
 def data_legivel():
