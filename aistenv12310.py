@@ -19,7 +19,6 @@ os.chdir(os.path.abspath(os.curdir))
 
 API_URL = "https://appaistein-dnaxg3amcthxecfs.eastus2-01.azurewebsites.net/aistein/"
 #API_URL = "http://localhost:8000/aistein/"
-
 # Utilitários
 def data_legivel():
     return datetime.now().strftime('%Y-%m-%d %H:%M:%S')
@@ -121,47 +120,40 @@ for msg in st.session_state.messages:
 if uploaded_file:
     arquivo_nome = uploaded_file.name
 
-    # Só processa se for um novo arquivo
     if (
         not st.session_state.arquivo_processado
         and arquivo_nome != st.session_state.ultimo_arquivo_processado
     ):
         local_path = save_uploaded_file(uploaded_file)
-        blob_name = upload_file_to_blob(local_path)
-        temp_path = download_blob_to_temp_file(blob_name)
-
-        if temp_path:
-            st.session_state["file_temp_path"] = temp_path
+        blob_name = upload_file_to_blob(local_path)  # 👈 Aqui pegamos o nome
+        if blob_name:
+            st.session_state["blob_name"] = blob_name  # 👈 Salva apenas o nome do blob
             st.session_state.arquivo_processado = True
             st.session_state.enviar_arquivo_prompt = True
-            st.session_state.ultimo_arquivo_processado = arquivo_nome  # Marca como processado
+            st.session_state.ultimo_arquivo_processado = arquivo_nome
             st.rerun()
+
+# Entrada do usuário
 chat_input = st.chat_input("Digite aqui o que precisa...")
 
 prompt = None
 is_auto_prompt = False
 
-# Manual prompt
 if chat_input:
     prompt = chat_input
-    is_auto_prompt = False
     st.session_state["prompt_ja_executado"] = False
-
-# Auto prompt
 elif (
-    st.session_state.get("file_temp_path")
-    and st.session_state.get("enviar_arquivo_prompt")
+    st.session_state.get("enviar_arquivo_prompt")
     and not st.session_state.get("prompt_ja_executado")
+    and st.session_state.get("blob_name")
 ):
-    prompt = st.session_state["file_temp_path"]
+    prompt = st.session_state["blob_name"]  # 👈 Usa o nome do blob como prompt
     is_auto_prompt = True
     st.session_state["prompt_ja_executado"] = True
 
 if prompt:
-
     msg_prompt = prompt if not is_auto_prompt else "📎 Arquivo enviado para análise."
     st.chat_message("user", avatar="🤓").write(msg_prompt)
-
     st.session_state.messages.append({"role": "user", "content": msg_prompt})
     st.session_state.chat_history.append(HumanMessage(content=msg_prompt))
 
@@ -179,26 +171,12 @@ if prompt:
         texto_limpo = re.sub(r"\\^!\[.*\s\w*\].", "", texto)
         st.chat_message("assistant", avatar="👤").write(texto_limpo)
 
-        try:
-            if 'imagens/' in response['resposta']:
-                IMG = response['resposta'].split('imagens/')[1].replace('(', '').replace(')', '').strip()
-                imagem = f"./imagens/{IMG}".split(".png")[0]
-                if imagem and os.path.exists(f"{imagem}.png"):
-                    st.markdown(f'<img src="data:image/png;base64,{base64.b64encode(open(f"{imagem}.png", "rb").read()).decode()}" />', unsafe_allow_html=True)
-        except Exception as e:
-            print("⚠️ Erro ao renderizar imagem de resposta:", e)
-
-    # ⬇️ SOMENTE AGORA, se era auto prompt, limpa os estados
     if is_auto_prompt:
         st.session_state["enviar_arquivo_prompt"] = False
         st.session_state["arquivo_processado"] = False
         st.session_state["file_temp_path"] = None
+        st.session_state["blob_name"] = None  # 👈 limpa o blob_name
         st.session_state["prompt_ja_executado"] = True
-    
-    # Limpa variável local
+
     prompt = None
     is_auto_prompt = False
-
-# Logs para debug
-print(f"AUTO PROMPT depois: {is_auto_prompt}")
-print(f"PROMPT depois: {prompt}")
